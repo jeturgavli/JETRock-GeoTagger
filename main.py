@@ -5,6 +5,7 @@ from PIL import Image
 import piexif
 
 
+# ------------------ LOGIC SAME ------------------ #
 def to_deg(value, loc):
     if value < 0:
         loc_value = loc[0]
@@ -14,10 +15,10 @@ def to_deg(value, loc):
     abs_value = abs(value)
     deg = int(abs_value)
     t1 = (abs_value - deg) * 60
-    min = int(t1)
-    sec = round((t1 - min) * 60, 5)
+    minute = int(t1)
+    sec = round((t1 - minute) * 60, 5)
 
-    return (deg, min, sec), loc_value
+    return (deg, minute, sec), loc_value
 
 
 def change_to_rational(number):
@@ -54,7 +55,6 @@ def add_metadata():
 
         exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}}
 
-        # GPS
         exif_dict["GPS"][piexif.GPSIFD.GPSLatitudeRef] = lat_deg[1]
         exif_dict["GPS"][piexif.GPSIFD.GPSLatitude] = [
             change_to_rational(x) for x in lat_deg[0]
@@ -64,10 +64,7 @@ def add_metadata():
             change_to_rational(x) for x in lon_deg[0]
         ]
 
-        # Description
         exif_dict["0th"][piexif.ImageIFD.ImageDescription] = description.encode("utf-8")
-
-        # Keywords
         exif_dict["0th"][piexif.ImageIFD.XPKeywords] = keywords.encode("utf-16le")
 
         exif_bytes = piexif.dump(exif_dict)
@@ -83,38 +80,55 @@ def add_metadata():
         messagebox.showerror("Error", str(e))
 
 
-# GUI
+# ------------------ UI DESIGN ------------------ #
 root = Tk()
-root.title("Jetur Gavli Program Image Geo Tagger")
-root.geometry("450x400")
+root.title("📍 Image Geo Tagger - JET Rock")
+root.geometry("520x420")
+root.configure(bg="#f5f5f5")
 
 image_path = StringVar()
 output_path = StringVar()
 
-Label(root, text="Select Image").pack()
-Entry(root, textvariable=image_path, width=45).pack()
-Button(root, text="Browse", command=select_image).pack()
+# Title
+Label(root, text="Image Geo Tagger", font=("Arial", 16, "bold"),
+      bg="#f5f5f5").pack(pady=10)
 
-Label(root, text="Save As").pack()
-Entry(root, textvariable=output_path, width=45).pack()
-Button(root, text="Browse", command=select_output).pack()
+frame = Frame(root, bg="#ffffff", bd=2, relief=RIDGE)
+frame.pack(padx=15, pady=10, fill="both", expand=True)
 
-Label(root, text="Latitude").pack()
-lat_entry = Entry(root)
-lat_entry.pack()
+# ---------- Image Selection ----------
+Label(frame, text="Select Image", bg="white").grid(row=0, column=0, sticky="w", padx=10, pady=5)
+Entry(frame, textvariable=image_path, width=40).grid(row=0, column=1, padx=5)
+Button(frame, text="Browse", command=select_image).grid(row=0, column=2, padx=5)
 
-Label(root, text="Longitude").pack()
-lon_entry = Entry(root)
-lon_entry.pack()
+# ---------- Output ----------
+Label(frame, text="Save As", bg="white").grid(row=1, column=0, sticky="w", padx=10, pady=5)
+Entry(frame, textvariable=output_path, width=40).grid(row=1, column=1, padx=5)
+Button(frame, text="Browse", command=select_output).grid(row=1, column=2, padx=5)
 
-Label(root, text="Keywords (comma separated)").pack()
-keywords_entry = Entry(root, width=40)
-keywords_entry.pack()
+# ---------- Coordinates ----------
+Label(frame, text="Latitude", bg="white").grid(row=2, column=0, sticky="w", padx=10, pady=5)
+lat_entry = Entry(frame)
+lat_entry.grid(row=2, column=1, padx=5)
 
-Label(root, text="Description").pack()
-desc_entry = Entry(root, width=40)
-desc_entry.pack()
+Label(frame, text="Longitude", bg="white").grid(row=3, column=0, sticky="w", padx=10, pady=5)
+lon_entry = Entry(frame)
+lon_entry.grid(row=3, column=1, padx=5)
 
-Button(root, text="Add Geo Tag", command=add_metadata, bg="green", fg="white").pack(pady=15)
+# ---------- Metadata ----------
+Label(frame, text="Keywords", bg="white").grid(row=4, column=0, sticky="w", padx=10, pady=5)
+keywords_entry = Entry(frame, width=40)
+keywords_entry.grid(row=4, column=1, columnspan=2, padx=5)
+
+Label(frame, text="Description", bg="white").grid(row=5, column=0, sticky="w", padx=10, pady=5)
+desc_entry = Entry(frame, width=40)
+desc_entry.grid(row=5, column=1, columnspan=2, padx=5)
+
+# ---------- Button ----------
+Button(root, text="🚀 Add Geo Tag",
+       command=add_metadata,
+       bg="#28a745", fg="white",
+       font=("Arial", 11, "bold"),
+       padx=10, pady=5).pack(pady=15)
 
 root.mainloop()
