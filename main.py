@@ -5,7 +5,6 @@ from PIL import Image
 import piexif
 
 
-# ------------------ LOGIC SAME ------------------ #
 def to_deg(value, loc):
     if value < 0:
         loc_value = loc[0]
@@ -80,33 +79,28 @@ def add_metadata():
         messagebox.showerror("Error", str(e))
 
 
-# ------------------ UI DESIGN ------------------ #
 root = Tk()
-root.title("📍 Image Geo Tagger - JET Rock")
+root.title("Image Geo Tagger - JET Rock(Jetur Gavli)")
 root.geometry("520x420")
 root.configure(bg="#f5f5f5")
 
 image_path = StringVar()
 output_path = StringVar()
 
-# Title
-Label(root, text="Image Geo Tagger", font=("Arial", 16, "bold"),
+Label(root, text="Image Geo Tagger Jetur Gavli", font=("Arial", 16, "bold"),
       bg="#f5f5f5").pack(pady=10)
 
 frame = Frame(root, bg="#ffffff", bd=2, relief=RIDGE)
 frame.pack(padx=15, pady=10, fill="both", expand=True)
 
-# ---------- Image Selection ----------
 Label(frame, text="Select Image", bg="white").grid(row=0, column=0, sticky="w", padx=10, pady=5)
 Entry(frame, textvariable=image_path, width=40).grid(row=0, column=1, padx=5)
 Button(frame, text="Browse", command=select_image).grid(row=0, column=2, padx=5)
 
-# ---------- Output ----------
 Label(frame, text="Save As", bg="white").grid(row=1, column=0, sticky="w", padx=10, pady=5)
 Entry(frame, textvariable=output_path, width=40).grid(row=1, column=1, padx=5)
 Button(frame, text="Browse", command=select_output).grid(row=1, column=2, padx=5)
 
-# ---------- Coordinates ----------
 Label(frame, text="Latitude", bg="white").grid(row=2, column=0, sticky="w", padx=10, pady=5)
 lat_entry = Entry(frame)
 lat_entry.grid(row=2, column=1, padx=5)
@@ -115,7 +109,6 @@ Label(frame, text="Longitude", bg="white").grid(row=3, column=0, sticky="w", pad
 lon_entry = Entry(frame)
 lon_entry.grid(row=3, column=1, padx=5)
 
-# ---------- Metadata ----------
 Label(frame, text="Keywords", bg="white").grid(row=4, column=0, sticky="w", padx=10, pady=5)
 keywords_entry = Entry(frame, width=40)
 keywords_entry.grid(row=4, column=1, columnspan=2, padx=5)
@@ -124,7 +117,6 @@ Label(frame, text="Description", bg="white").grid(row=5, column=0, sticky="w", p
 desc_entry = Entry(frame, width=40)
 desc_entry.grid(row=5, column=1, columnspan=2, padx=5)
 
-# ---------- Button ----------
 Button(root, text="🚀 Add Geo Tag",
        command=add_metadata,
        bg="#28a745", fg="white",
